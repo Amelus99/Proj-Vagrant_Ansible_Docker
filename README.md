@@ -67,10 +67,11 @@ end
 ### 2. Provisionamento com Ansible
 
 O Ansible é responsável por:
+
 - Alterar o hostname da VM.
 - Instalar pacotes básicos.
 - Instalar Docker e Docker Compose.
-- Copiar os arquivos necessários (`docker-compose.yml` e diretório `nginx`) para a VM.
+- Copiar os arquivos necessários (`docker-compose.yml`) para a VM.
 - Subir a infraestrutura Docker.
 
 ### Organização do Playbook
@@ -119,11 +120,6 @@ Instala Docker e Docker Compose, além de copiar os arquivos necessários e subi
     src: ../../../docker-compose.yml
     dest: /home/vagrant/docker-compose.yml
 
-- name: Copiar diretório nginx para a VM
-  copy:
-    src: ../../../nginx/
-    dest: /home/vagrant/nginx/
-
 - name: Subir infraestrutura Docker
   command: docker-compose up -d
   args:
@@ -136,9 +132,13 @@ Instala Docker e Docker Compose, além de copiar os arquivos necessários e subi
 
 O arquivo `docker-compose.yml` define:
 
-- **webproxy:** Container baseado em uma imagem personalizada do Nginx com balanceamento de carga de camada 4.
+- **webproxy:** Container baseado em uma imagem personalizada do Nginx com balanceamento de carga de camada 4, publicada no Docker Hub.
 - **webserver:** Container oficial do WordPress.
 - **database:** Container oficial do MySQL 5.7.
+
+A imagem personalizada do Nginx está publicada em:
+
+[https://hub.docker.com/r/amelus99/nginx-lb](https://hub.docker.com/r/amelus99/nginx-lb)
 
 ```yaml
 version: '3'
@@ -153,7 +153,7 @@ volumes:
 
 services:
   webproxy:
-    build: ./nginx
+    image: amelus99/nginx-lb:1.0
     networks:
       - wordpress
     ports:
@@ -257,4 +257,3 @@ vagrant up
 
 - **Samuel Silva**
 - Projeto acadêmico para a disciplina **Administração de Sistemas Abertos**
-
