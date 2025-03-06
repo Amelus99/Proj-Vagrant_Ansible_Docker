@@ -1,0 +1,16 @@
+---
+- name: Atualizar cache do apt
+  apt:
+    update_cache: yes
+
+- name: Alterar hostname
+  hostname:
+    name: server.samuel.silva
+
+- name: Instalar pacotes básicos
+  apt:
+    name:
+      - curl
+      - vim
+    state: present
+

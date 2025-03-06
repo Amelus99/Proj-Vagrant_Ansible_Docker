@@ -1,0 +1,6 @@
+---
+- name: Reiniciar Docker
+  systemd:
+    name: docker
+    state: restarted
+
