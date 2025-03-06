@@ -44,15 +44,15 @@
     groups: docker
     append: yes
     
-- name: Copiar arquivos do docker-compose para a VM
+- name: Copiar docker-compose.yml para a VM
   copy:
-    src: ../docker-compose.yml
+    src: ../../../docker-compose.yml
     dest: /home/vagrant/docker-compose.yml
 
 - name: Copiar diretório nginx para a VM
   copy:
-    src: ../nginx/
-    dest: /home/vagrant/
+    src: ../../../nginx/
+    dest: /home/vagrant/nginx/
 
 - name: Subir infraestrutura Docker
   command: docker-compose up -d
