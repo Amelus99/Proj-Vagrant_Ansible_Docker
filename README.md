@@ -258,9 +258,3 @@ vagrant up
 - **Samuel Silva**
 - Projeto acadêmico para a disciplina **Administração de Sistemas Abertos**
 
----
-
-## Licença
-
-Este projeto é de uso educacional e está disponível sob a licença MIT.
-
