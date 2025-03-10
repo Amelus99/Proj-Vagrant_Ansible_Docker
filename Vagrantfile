@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "roboxes/ubuntu2204"
   
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "SamuelSilva"
+    vb.name = "SamuelIsabel"
     vb.memory = "1024"
     vb.cpus = 1
   end
@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "playbook.yml"
     ansible.extra_vars = {
-      hostname: "server.samuel.silva"
+      hostname: "server.samuel.isabel"
     }
   end
 

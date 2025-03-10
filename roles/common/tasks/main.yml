@@ -5,7 +5,7 @@
 
 - name: Alterar hostname
   hostname:
-    name: server.samuel.silva
+    name: server.samuel.isabel
 
 - name: Instalar pacotes básicos
   apt:
