@@ -42,7 +42,7 @@ O arquivo `Vagrantfile` define:
 - Box base: `roboxes/ubuntu2204`
 - Provider: VirtualBox
 - IP privado: `192.168.57.10`
-- Nome da VM: `SamuelSilva`
+- Nome da VM: `SamuelIsabel`
 - Provisionamento via Ansible, chamando o `playbook_ansible.yml`
 
 ### Exemplo do Vagrantfile
@@ -51,7 +51,7 @@ O arquivo `Vagrantfile` define:
 Vagrant.configure("2") do |config|
   config.vm.box = "roboxes/ubuntu2204"
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "SamuelSilva"
+    vb.name = "SamuelIsabel"
     vb.memory = "1024"
     vb.cpus = 1
   end
@@ -80,7 +80,7 @@ O playbook principal `playbook_ansible.yml` é bem simples e apenas inclui **rol
 
 ```yaml
 ---
-- name: Provisionar Servidor Samuel
+- name: Provisionar Servidor
   hosts: all
   become: true
 
@@ -100,7 +100,7 @@ Configura o sistema operacional básico, incluindo hostname e pacotes essenciais
 
 - name: Alterar hostname
   hostname:
-    name: server.samuel.silva
+    name: server.samuel.isabel
 
 - name: Instalar pacotes básicos
   apt:
@@ -256,4 +256,5 @@ vagrant up
 ## Autor
 
 - **Samuel Silva**
+- **Maria Isabel**
 - Projeto acadêmico para a disciplina **Administração de Sistemas Abertos**
