@@ -14,9 +14,13 @@ Esse projeto demonstra a aplicação prática de ferramentas de automação para
 
 ---
 
-## Estrutura do Projeto
+##Estrutura do Projeto
+A estrutura do projeto segue uma organização clara para facilitar o provisionamento automatizado da infraestrutura. Os principais arquivos responsáveis pela configuração do ambiente são:
 
-> **Nota:** A pasta `nginx/` está listada na estrutura, mas não é utilizada no provisionamento atual. Isso ocorre porque a imagem personalizada do Nginx já está publicada no Docker Hub e é puxada diretamente pelo `docker-compose.yml`, eliminando a necessidade do Dockerfile e das configurações locais.
+Vagrantfile – Define a criação e configuração da Máquina Virtual.
+playbook.yml – Contém as instruções do Ansible para instalação e configuração do ambiente.
+docker-compose.yml – Orquestra os containers do WordPress, MySQL e Nginx.
+Além disso, há uma pasta nginx/, que originalmente conteria arquivos para a construção da imagem personalizada do Nginx. No entanto, como essa imagem já foi publicada no Docker Hub, o docker-compose.yml a utiliza diretamente, tornando desnecessário o uso do Dockerfile e do nginx.conf localmente.
 
 ```
 projeto-samuel/
@@ -26,21 +30,20 @@ projeto-samuel/
 ├── nginx/
 │   ├── Dockerfile
 │   └── nginx.conf
+
 ```
 
 ---
 
-## Fluxo do Provisionamento
+##1. Criação da Máquina Virtual com Vagrant
+O arquivo Vagrantfile é responsável por definir e configurar a Máquina Virtual que servirá como base para o ambiente. Ele estabelece os seguintes parâmetros:
 
-### 1. Criação da VM com Vagrant
-
-O arquivo `Vagrantfile` define:
-
-- Box base: `roboxes/ubuntu2204`
-- Provider: VirtualBox
-- IP privado: `192.168.57.10`
-- Nome da VM: `SamuelIsabel`
-- Provisionamento via Ansible, chamando o `playbook.yml`
+Box Base: roboxes/ubuntu2204 (Ubuntu 22.04)
+Provider: VirtualBox
+IP Privado: 192.168.57.10 (para acesso direto à aplicação)
+Nome da VM: SamuelIsabel
+Provisionamento Automatizado: Chama o Ansible para executar o playbook.yml, que realizará a configuração do sistema e a implantação dos containers.
+Essa abordagem garante um ambiente padronizado e replicável, reduzindo a necessidade de configurações manuais e facilitando a implantação do WordPress.
 
 ### Exemplo do Vagrantfile
 
