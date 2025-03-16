@@ -1,3 +1,11 @@
+📌 Projeto acadêmico desenvolvido para a disciplina Administração de Sistemas Abertos. 
+
+### Aluno(a): *Maria Isabel Saturnino*  Matrícula: *20211380035*
+### Aluno(a): *Samuel Araújo Cabral e Silva* Matrícula: *20242380040*
+### Professor: *Pedro Filho*
+
+#
+
 # Projeto - Provisionamento com Vagrant, Ansible e Docker
 
 ## **Introdução**
@@ -208,15 +216,17 @@ A aplicação WordPress estará disponível em:
 
 ## Observações Finais
 
-- O provisionamento é totalmente automatizado.
-- O Docker Compose é iniciado automaticamente durante o provisionamento.
-- Toda a infraestrutura pode ser destruída com:
+🚀 Provisionamento 100% automatizado utilizando Vagrant, Ansible e Docker.
+🐳 Docker Compose é iniciado automaticamente durante o processo de configuração.
+🔄 Toda a infraestrutura pode ser facilmente destruída e recriada, garantindo um ambiente limpo para novos testes.
+
+🔹 Para destruir o ambiente:
 
 ```bash
 vagrant destroy
 ```
 
-E recriada com:
+🔹 Para recriar do zero:
 
 ```bash
 vagrant up
@@ -224,8 +234,3 @@ vagrant up
 
 ---
 
-## Autores
-
-- **Samuel Silva**
-- **Maria Isabel Saturnino**
-- Projeto acadêmico para a disciplina **Administração de Sistemas Abertos**
