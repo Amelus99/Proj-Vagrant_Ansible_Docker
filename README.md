@@ -169,27 +169,27 @@ A imagem do Nginx Load Balancer já está publicada no Docker Hub e pode ser ace
 🔗 https://hub.docker.com/r/amelus99/nginx-lb
 
 
-  version: '3'
-  
-  # Definição da rede Docker
-  networks:
-    wordpress:
-      driver: bridge
-  
-  # Definição dos volumes persistentes
-  volumes:
-    app:  # Volume para armazenar arquivos do WordPress
-    my:   # Volume para armazenar os dados do MySQL
-  
-  services:
-    webproxy:
-      image: amelus99/nginx-lb:1.0
-      networks:
-        - wordpress
-      ports:
-        - "8080:8080"  # Expondo o serviço na porta 8080
-      depends_on:
-        - webserver
+    version: '3'
+    
+    # Definição da rede Docker
+    networks:
+      wordpress:
+        driver: bridge
+    
+    # Definição dos volumes persistentes
+    volumes:
+      app:  # Volume para armazenar arquivos do WordPress
+      my:   # Volume para armazenar os dados do MySQL
+    
+    services:
+      webproxy:
+        image: amelus99/nginx-lb:1.0
+        networks:
+          - wordpress
+        ports:
+          - "8080:8080"  # Expondo o serviço na porta 8080
+        depends_on:
+          - webserver
   
     webserver:
       image: wordpress:latest
