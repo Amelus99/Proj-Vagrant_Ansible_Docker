@@ -158,15 +158,63 @@ O arquivo playbook.yml contém todas as tarefas necessárias para essa configura
 
 ### 3. Stack Docker - WordPress + Nginx + MySQL
 
-O arquivo `docker-compose.yml` define:
+O arquivo docker-compose.yml define a infraestrutura baseada em containers Docker, permitindo a implantação automatizada do WordPress. Ele é composto pelos seguintes serviços:
 
-- **webproxy:** Container baseado em uma imagem personalizada do Nginx com balanceamento de carga de camada 4, publicada no Docker Hub.
-- **webserver:** Container oficial do WordPress.
-- **database:** Container oficial do MySQL 5.7.
+webproxy – Container baseado em uma imagem personalizada do Nginx com balanceamento de carga de camada 4. Essa imagem já está publicada no Docker Hub e é utilizada diretamente pelo docker-compose.yml.
+webserver – Container baseado na imagem oficial do WordPress, responsável por hospedar o site.
+database – Container baseado na imagem oficial do MySQL 5.7, que armazena os dados do WordPress.
+📌 Imagem personalizada do Nginx
+A imagem do Nginx Load Balancer já está publicada no Docker Hub e pode ser acessada no link abaixo:
 
-A imagem personalizada do Nginx está publicada em:
+🔗 https://hub.docker.com/r/amelus99/nginx-lb
 
-[https://hub.docker.com/r/amelus99/nginx-lb](https://hub.docker.com/r/amelus99/nginx-lb)
+
+  version: '3'
+  
+  # Definição da rede Docker
+  networks:
+    wordpress:
+      driver: bridge
+  
+  # Definição dos volumes persistentes
+  volumes:
+    app:  # Volume para armazenar arquivos do WordPress
+    my:   # Volume para armazenar os dados do MySQL
+  
+  services:
+    webproxy:
+      image: amelus99/nginx-lb:1.0
+      networks:
+        - wordpress
+      ports:
+        - "8080:8080"  # Expondo o serviço na porta 8080
+      depends_on:
+        - webserver
+  
+    webserver:
+      image: wordpress:latest
+      networks:
+        - wordpress
+      environment:
+        WORDPRESS_DB_HOST: database
+        WORDPRESS_DB_USER: wordpress
+        WORDPRESS_DB_PASSWORD: wordpresspassword
+        WORDPRESS_DB_NAME: wordpress
+      volumes:
+        - app:/var/www/html  # Volume persistente para o WordPress
+  
+    database:
+      image: mysql:5.7
+      networks:
+        - wordpress
+      environment:
+        MYSQL_DATABASE: wordpress
+        MYSQL_USER: wordpress
+        MYSQL_PASSWORD: wordpresspassword
+        MYSQL_ROOT_PASSWORD: rootpassword
+      volumes:
+        - my:/var/lib/mysql  # Volume persistente para os dados do banco
+
 
 ---
 
