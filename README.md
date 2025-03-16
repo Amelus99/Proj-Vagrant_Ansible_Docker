@@ -1,6 +1,6 @@
 # Projeto - Provisionamento com Vagrant, Ansible e Docker
 
-**Introdução**
+## **Introdução**
 
 Neste projeto, será implementado um ambiente automatizado para a implantação do WordPress utilizando ferramentas de provisionamento e conteinerização, como Vagrant, Ansible e Docker. O objetivo é criar um servidor configurado inteiramente via código, garantindo uma infraestrutura replicável e eficiente.
 
