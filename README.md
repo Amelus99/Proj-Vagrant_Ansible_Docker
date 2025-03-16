@@ -165,6 +165,7 @@ webserver – Container baseado na imagem oficial do WordPress, responsável por
 database – Container baseado na imagem oficial do MySQL 5.7, que armazena os dados do WordPress.
 
 📌 Imagem personalizada do Nginx
+
 A imagem do Nginx Load Balancer já está publicada no Docker Hub e pode ser acessada no link abaixo:
 
 🔗 https://hub.docker.com/r/amelus99/nginx-lb
