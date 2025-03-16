@@ -10,7 +10,7 @@ volumes:
 
 services:
   webproxy:
-    build: ./nginx
+    image: amelus99/nginx-lb:1.0
     networks:
       - wordpress
     ports:
@@ -41,4 +41,8 @@ services:
       MYSQL_ROOT_PASSWORD: rootpassword
     volumes:
       - my:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
 
