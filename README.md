@@ -14,7 +14,7 @@ Esse projeto demonstra a aplicação prática de ferramentas de automação para
 
 ---
 
-##Estrutura do Projeto
+## Estrutura do Projeto
 A estrutura do projeto segue uma organização clara para facilitar o provisionamento automatizado da infraestrutura. Os principais arquivos responsáveis pela configuração do ambiente são:
 
 Vagrantfile – Define a criação e configuração da Máquina Virtual.
@@ -35,7 +35,7 @@ projeto-samuel/
 
 ---
 
-##1. Criação da Máquina Virtual com Vagrant
+## 1. Criação da Máquina Virtual com Vagrant
 
 O arquivo Vagrantfile é responsável por definir e configurar a Máquina Virtual que servirá como base para o ambiente. Ele estabelece os seguintes parâmetros:
 
