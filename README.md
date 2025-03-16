@@ -163,6 +163,7 @@ O arquivo docker-compose.yml define a infraestrutura baseada em containers Docke
 webproxy – Container baseado em uma imagem personalizada do Nginx com balanceamento de carga de camada 4. Essa imagem já está publicada no Docker Hub e é utilizada diretamente pelo docker-compose.yml.
 webserver – Container baseado na imagem oficial do WordPress, responsável por hospedar o site.
 database – Container baseado na imagem oficial do MySQL 5.7, que armazena os dados do WordPress.
+
 📌 Imagem personalizada do Nginx
 A imagem do Nginx Load Balancer já está publicada no Docker Hub e pode ser acessada no link abaixo:
 
