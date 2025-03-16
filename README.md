@@ -1,7 +1,7 @@
 📌 Projeto acadêmico desenvolvido para a disciplina Administração de Sistemas Abertos. 
 
-### Aluno(a): *Maria Isabel Saturnino*  Matrícula: *20211380035*
 ### Aluno(a): *Samuel Araújo Cabral e Silva* Matrícula: *20242380040*
+### Aluno(a): *Maria Isabel Saturnino*  Matrícula: *20211380035*
 ### Professor: *Pedro Filho*
 
 #
