@@ -78,80 +78,52 @@ O arquivo playbook.yml contém todas as tarefas necessárias para essa configura
 
 ```yaml
 
-- name: Provisionar Servidor Completo
-  hosts: all
-  become: true
+version: '3'
 
-  tasks:
-    - name: Atualizar cache do apt
-      apt:
-        update_cache: yes
+# Definição da rede Docker
+networks:
+  wordpress:
+    driver: bridge
 
-    - name: Alterar hostname
-      hostname:
-        name: server.samuel.Isabel
+# Definição dos volumes persistentes
+volumes:
+  app:  # Volume para armazenar arquivos do WordPress
+  my:   # Volume para armazenar os dados do MySQL
 
-    - name: Instalar pacotes básicos
-      apt:
-        name:
-          - curl
-          - vim
-        state: present
+services:
+  webproxy:
+    image: amelus99/nginx-lb:1.0
+    networks:
+      - wordpress
+    ports:
+      - "8080:8080"  # Expondo o serviço na porta 8080
+    depends_on:
+      - webserver
 
-    - name: Instalar dependências do Docker
-      apt:
-        name:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - software-properties-common
-        state: present
+  webserver:
+    image: wordpress:latest
+    networks:
+      - wordpress
+    environment:
+      WORDPRESS_DB_HOST: database
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpresspassword
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - app:/var/www/html  # Volume persistente para o WordPress
 
-    - name: Adicionar chave GPG do Docker
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
+  database:
+    image: mysql:5.7
+    networks:
+      - wordpress
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpresspassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - my:/var/lib/mysql  # Volume persistente para os dados do banco
 
-    - name: Adicionar repositório oficial do Docker
-      apt_repository:
-        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
-        state: present
-        filename: docker
-
-    - name: Atualizar cache do apt após adicionar repositório
-      apt:
-        update_cache: yes
-
-    - name: Instalar Docker e Docker Compose
-      apt:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-          - docker-compose
-        state: present
-
-    - name: Iniciar e habilitar serviço do Docker
-      systemd:
-        name: docker
-        state: started
-        enabled: yes
-
-    - name: Adicionar usuário vagrant ao grupo docker
-      user:
-        name: vagrant
-        groups: docker
-        append: yes
-
-    - name: Copiar docker-compose.yml para a VM
-      copy:
-        src: docker-compose.yml
-        dest: /home/vagrant/docker-compose.yml
-
-    - name: Subir infraestrutura Docker
-      command: docker-compose up -d
-      args:
-        chdir: /home/vagrant/
 ```
 
 ---
