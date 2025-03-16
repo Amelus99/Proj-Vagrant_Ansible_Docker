@@ -10,25 +10,16 @@ Este projeto tem como objetivo criar uma infraestrutura automatizada para hosped
 
 ## Estrutura do Projeto
 
+> **Nota:** A pasta `nginx/` está listada na estrutura, mas não é utilizada no provisionamento atual. Isso ocorre porque a imagem personalizada do Nginx já está publicada no Docker Hub e é puxada diretamente pelo `docker-compose.yml`, eliminando a necessidade do Dockerfile e das configurações locais.
+
 ```
 projeto-samuel/
 ├── Vagrantfile
-├── playbook_ansible.yml
+├── playbook.yml
 ├── docker-compose.yml
 ├── nginx/
 │   ├── Dockerfile
 │   └── nginx.conf
-└── roles/
-    ├── common/
-    │   ├── tasks/
-    │   │   └── main.yml
-    │   └── handlers/
-    │       └── main.yml
-    └── docker/
-        ├── tasks/
-        │   └── main.yml
-        └── handlers/
-            └── main.yml
 ```
 
 ---
@@ -43,7 +34,7 @@ O arquivo `Vagrantfile` define:
 - Provider: VirtualBox
 - IP privado: `192.168.57.10`
 - Nome da VM: `SamuelIsabel`
-- Provisionamento via Ansible, chamando o `playbook_ansible.yml`
+- Provisionamento via Ansible, chamando o `playbook.yml`
 
 ### Exemplo do Vagrantfile
 
@@ -57,7 +48,7 @@ Vagrant.configure("2") do |config|
   end
   config.vm.network "private_network", ip: "192.168.57.10"
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "playbook_ansible.yml"
+    ansible.playbook = "playbook.yml"
   end
 end
 ```
@@ -74,56 +65,84 @@ O Ansible é responsável por:
 - Copiar os arquivos necessários (`docker-compose.yml`) para a VM.
 - Subir a infraestrutura Docker.
 
-### Organização do Playbook
-
-O playbook principal `playbook_ansible.yml` é bem simples e apenas inclui **roles**.
+O **playbook.yml** contém todas as tarefas:
 
 ```yaml
 ---
-- name: Provisionar Servidor
+- name: Provisionar Servidor Completo
   hosts: all
   become: true
 
-  roles:
-    - role: common
-    - role: docker
-```
+  tasks:
+    - name: Atualizar cache do apt
+      apt:
+        update_cache: yes
 
-#### Role `common`
+    - name: Alterar hostname
+      hostname:
+        name: server.samuel.Isabel
 
-Configura o sistema operacional básico, incluindo hostname e pacotes essenciais.
+    - name: Instalar pacotes básicos
+      apt:
+        name:
+          - curl
+          - vim
+        state: present
 
-```yaml
-- name: Atualizar cache do apt
-  apt:
-    update_cache: yes
+    - name: Instalar dependências do Docker
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
 
-- name: Alterar hostname
-  hostname:
-    name: server.samuel.isabel
+    - name: Adicionar chave GPG do Docker
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
 
-- name: Instalar pacotes básicos
-  apt:
-    name:
-      - curl
-      - vim
-    state: present
-```
+    - name: Adicionar repositório oficial do Docker
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+        state: present
+        filename: docker
 
-#### Role `docker`
+    - name: Atualizar cache do apt após adicionar repositório
+      apt:
+        update_cache: yes
 
-Instala Docker e Docker Compose, além de copiar os arquivos necessários e subir a stack com Docker Compose.
+    - name: Instalar Docker e Docker Compose
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose
+        state: present
 
-```yaml
-- name: Copiar docker-compose.yml para a VM
-  copy:
-    src: ../../../docker-compose.yml
-    dest: /home/vagrant/docker-compose.yml
+    - name: Iniciar e habilitar serviço do Docker
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
 
-- name: Subir infraestrutura Docker
-  command: docker-compose up -d
-  args:
-    chdir: /home/vagrant/
+    - name: Adicionar usuário vagrant ao grupo docker
+      user:
+        name: vagrant
+        groups: docker
+        append: yes
+
+    - name: Copiar docker-compose.yml para a VM
+      copy:
+        src: docker-compose.yml
+        dest: /home/vagrant/docker-compose.yml
+
+    - name: Subir infraestrutura Docker
+      command: docker-compose up -d
+      args:
+        chdir: /home/vagrant/
 ```
 
 ---
@@ -139,85 +158,6 @@ O arquivo `docker-compose.yml` define:
 A imagem personalizada do Nginx está publicada em:
 
 [https://hub.docker.com/r/amelus99/nginx-lb](https://hub.docker.com/r/amelus99/nginx-lb)
-
-```yaml
-version: '3'
-
-networks:
-  wordpress:
-    driver: bridge
-
-volumes:
-  app:
-  my:
-
-services:
-  webproxy:
-    image: amelus99/nginx-lb:1.0
-    networks:
-      - wordpress
-    ports:
-      - "8080:8080"
-    depends_on:
-      - webserver
-
-  webserver:
-    image: wordpress:latest
-    networks:
-      - wordpress
-    environment:
-      WORDPRESS_DB_HOST: database
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpresspassword
-      WORDPRESS_DB_NAME: wordpress
-    volumes:
-      - app:/var/www/html
-
-  database:
-    image: mysql:5.7
-    networks:
-      - wordpress
-    environment:
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpresspassword
-      MYSQL_ROOT_PASSWORD: rootpassword
-    volumes:
-      - my:/var/lib/mysql
-```
-
----
-
-### 4. Dockerfile Personalizado do Nginx
-
-```Dockerfile
-FROM nginx:latest
-
-RUN apt-get update && apt-get install -y iputils-ping curl && apt-get clean
-
-COPY nginx.conf /etc/nginx/nginx.conf
-
-EXPOSE 8080
-```
-
----
-
-### 5. Configuração Nginx (nginx.conf)
-
-```nginx
-events {}
-
-stream {
-    upstream web_backend {
-        server webserver:80;
-    }
-
-    server {
-        listen 8080;
-        proxy_pass web_backend;
-    }
-}
-```
 
 ---
 
@@ -253,8 +193,8 @@ vagrant up
 
 ---
 
-## Autor
+## Autores
 
 - **Samuel Silva**
-- **Maria Isabel**
+- **Maria Isabel Saturnino**
 - Projeto acadêmico para a disciplina **Administração de Sistemas Abertos**
