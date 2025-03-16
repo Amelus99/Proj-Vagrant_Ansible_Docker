@@ -77,7 +77,7 @@ Subir a infraestrutura Docker, iniciando os containers do WordPress.
 O arquivo playbook.yml contém todas as tarefas necessárias para essa configuração:
 
 ```yaml
----
+
 - name: Provisionar Servidor Completo
   hosts: all
   become: true
