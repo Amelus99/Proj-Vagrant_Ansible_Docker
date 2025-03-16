@@ -1,10 +1,16 @@
 # Projeto - Provisionamento com Vagrant, Ansible e Docker
 
-Este projeto tem como objetivo criar uma infraestrutura automatizada para hospedar uma aplicação **WordPress**, utilizando as seguintes tecnologias:
+**Introdução**
 
-- **Vagrant** para criação e gestão da máquina virtual.
-- **Ansible** para provisionamento e configuração da VM.
-- **Docker e Docker Compose** para criar e orquestrar os containers necessários para a aplicação.
+Neste projeto, será implementado um ambiente automatizado para a implantação do WordPress utilizando ferramentas de provisionamento e conteinerização, como Vagrant, Ansible e Docker. O objetivo é criar um servidor configurado inteiramente via código, garantindo uma infraestrutura replicável e eficiente.
+
+A implementação seguirá um fluxo estruturado em três etapas: primeiro, a criação de uma Máquina Virtual com Vagrant, seguida da configuração automatizada com Ansible, e, por fim, a construção de uma infraestrutura baseada em Docker para a hospedagem do WordPress.
+
+A VM será provisionada com Ubuntu 22.04, configurada com um endereço IP privado e um nome específico. O Ansible será responsável por instalar o Docker e executar um docker-compose, que criará três containers interconectados: um proxy reverso Nginx, um servidor WordPress e um banco de dados MySQL.
+
+Além disso, será desenvolvida uma imagem personalizada do Nginx, que atuará como balanceador de carga de camada 4, garantindo um melhor desempenho no encaminhamento de requisições. Todo o processo será testado acessando o WordPress por meio do endereço http://192.168.57.10:8080.
+
+Esse projeto demonstra a aplicação prática de ferramentas de automação para o provisionamento de servidores e a gestão de aplicações conteinerizadas, reforçando conceitos essenciais de infraestrutura como código (IaC).
 
 ---
 
