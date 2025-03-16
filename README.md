@@ -65,17 +65,16 @@ end
 
 ---
 
-### 2. Provisionamento com Ansible
+## 2. Provisionamento com Ansible
 
-O Ansible é responsável por:
+O Ansible é responsável pela configuração automatizada do ambiente, garantindo que todos os pacotes e serviços necessários sejam instalados e configurados corretamente. As principais tarefas incluem:
 
-- Alterar o hostname da VM.
-- Instalar pacotes básicos.
-- Instalar Docker e Docker Compose.
-- Copiar os arquivos necessários (`docker-compose.yml`) para a VM.
-- Subir a infraestrutura Docker.
-
-O **playbook.yml** contém todas as tarefas:
+Alterar o hostname da máquina virtual.
+Instalar pacotes básicos e dependências.
+Instalar Docker e Docker Compose.
+Copiar os arquivos necessários para a VM, incluindo o docker-compose.yml.
+Subir a infraestrutura Docker, iniciando os containers do WordPress.
+O arquivo playbook.yml contém todas as tarefas necessárias para essa configuração:
 
 ```yaml
 ---
