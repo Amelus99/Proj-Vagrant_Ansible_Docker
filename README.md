@@ -36,6 +36,7 @@ projeto-samuel/
 ---
 
 ##1. Criação da Máquina Virtual com Vagrant
+
 O arquivo Vagrantfile é responsável por definir e configurar a Máquina Virtual que servirá como base para o ambiente. Ele estabelece os seguintes parâmetros:
 
 Box Base: roboxes/ubuntu2204 (Ubuntu 22.04)
